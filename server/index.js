@@ -10,7 +10,7 @@ const {
   fetchRestaurants,
   createReservation,
   fetchReservations,
-  // destroyReservation,
+  destroyReservation,
 } = require('./db');
 
 // API routes
@@ -46,7 +46,7 @@ const init = async () => {
   console.log(await fetchRestaurants());
 
 
-  const [reservation1, reservation2, reservation3] = await Promise.all([
+  const [reservation, reservation2, reservation3] = await Promise.all([
     createReservation({
       date: '2025-03-18',
       party_count: 2,
@@ -67,10 +67,16 @@ const init = async () => {
     }),
   ]);
   console.log(await fetchReservations());
+  await destroyReservation({ id: reservation.id, customer_id: reservation.customer_id });
+  console.log(await fetchReservations());
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => {
     console.log(`Server is listening on port ${port}.`);
-  })
+    console.log('some curl commands to test');
+    console.log(`curl localhost:${port}/api/users`);
+    console.log(`curl localhost:${port}/api/places`);
+    console.log(`curl localhost:${port}/api/vacations`);
+  });
 }
 init();
