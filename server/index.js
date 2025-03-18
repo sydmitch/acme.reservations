@@ -4,11 +4,12 @@ const app = express();
 const { 
   client,
   createTables,
-  // createCustomer,
-  // createRestaurant,
-  // fetchCustomers,
-  // fetchRestaurants,
-  // createReservation,
+  createCustomer,
+  createRestaurant,
+  fetchCustomers,
+  fetchRestaurants,
+  createReservation,
+  fetchReservations,
   // destroyReservation,
 } = require('./db');
 
@@ -40,8 +41,32 @@ const init = async () => {
     createRestaurant({ name: 'diner'}),
     createRestaurant({ name: 'bistro'}),
     createRestaurant({ name: 'steakhouse'}),
-  ])
+  ]);
+  console.log(await fetchCustomers());
+  console.log(await fetchRestaurants());
 
+
+  const [reservation1, reservation2, reservation3] = await Promise.all([
+    createReservation({
+      date: '2025-03-18',
+      party_count: 2,
+      restaurant_id: diner.id,
+      customer_id: moe.id
+    }),
+    createReservation({
+      date: '2025-04-01',
+      party_count: 4,
+      restaurant_id: bistro.id,
+      customer_id: lucy.id
+    }),
+    createReservation({
+      date: '2025-05-12',
+      party_count: 6,
+      restaurant_id: steakhouse.id,
+      customer_id: larry.id
+    }),
+  ]);
+  console.log(await fetchReservations());
 
   const port = process.env.PORT || 3000;
   app.listen(port, () => {
