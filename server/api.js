@@ -1,9 +1,17 @@
 // API routes
 const router = require('express').Router();
 const client = require('./db');
+const { 
+  fetchCustomers, 
+  fetchRestaurants, 
+  fetchReservations, 
+  createReservation, 
+  destroyReservation 
+} = require('./db');
+
 
 // router - localhost:3000/api
-router.get('/api/customers', async (req, res, next) => {
+router.get('/customers', async (req, res, next) => {
   try {
     res.send(await fetchCustomers());
   } catch (error) {
@@ -11,7 +19,7 @@ router.get('/api/customers', async (req, res, next) => {
   }
 });
 
-router.get('/api/restaurants', async (req, res, next) => {
+router.get('/restaurants', async (req, res, next) => {
   try {
     res.send(await fetchRestaurants());
   } catch (error) {
@@ -19,7 +27,7 @@ router.get('/api/restaurants', async (req, res, next) => {
   }
 });
 
-router.get('/api/reservations', async (req, res, next) => {
+router.get('/reservations', async (req, res, next) => {
   try {
     res.send(await fetchReservations());
   } catch (error) {
@@ -27,7 +35,7 @@ router.get('/api/reservations', async (req, res, next) => {
   }
 });
 
-router.post('/api/customers/:customer_id/reservations', async (req, res, next) => {
+router.post('/customers/:customer_id/reservations', async (req, res, next) => {
   try {
     res.status(201).send(await createReservation({
       date: req.body.date,
@@ -40,7 +48,7 @@ router.post('/api/customers/:customer_id/reservations', async (req, res, next) =
   }
 });
 
-router.delete('/api/customers/:customer_id/reservations/:id', async (req, res, next) => {
+router.delete('/customers/:customer_id/reservations/:id', async (req, res, next) => {
   try {
     await destroyReservation({
       id: req.params.id,

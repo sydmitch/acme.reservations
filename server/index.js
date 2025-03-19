@@ -21,7 +21,7 @@ app.use('/api', apiRouter);
 
 
 app.use((error, req, res, next) => {
-  res.status(error.status || 500).send({ error: err.message || err});
+  res.status(error.status || 500).send({ error: error.message || err});
 });
 
 
@@ -35,18 +35,18 @@ const init = async () => {
   const [moe, lucy, larry, ethyl, fred, sarah, joe, curly, betty, 
     diner, bistro, steakhouse
   ] = await Promise.all([
-    createCustomer({ name: 'moe'}),
-    createCustomer({ name: 'lucy'}),
-    createCustomer({ name: 'larry'}),
-    createCustomer({ name: 'ethyl'}),
-    createCustomer({ name: 'fred'}),
-    createCustomer({ name: 'sarah'}),
-    createCustomer({ name: 'joe'}),
-    createCustomer({ name: 'curly'}),
-    createCustomer({ name: 'betty'}),
-    createRestaurant({ name: 'diner'}),
-    createRestaurant({ name: 'bistro'}),
-    createRestaurant({ name: 'steakhouse'}),
+    createCustomer('moe'),
+    createCustomer('lucy'),
+    createCustomer('larry'),
+    createCustomer('ethyl'),
+    createCustomer('fred'),
+    createCustomer('sarah'),
+    createCustomer('joe'),
+    createCustomer('curly'),
+    createCustomer('betty'),
+    createRestaurant('diner'),
+    createRestaurant('bistro'),
+    createRestaurant('steakhouse'),
   ]);
   console.log(await fetchCustomers());
   console.log(await fetchRestaurants());
@@ -73,7 +73,9 @@ const init = async () => {
     }),
   ]);
   console.log(await fetchReservations());
-  await destroyReservation({ id: reservation.id, customer_id: reservation.customer_id });
+  if (reservation) {
+    await destroyReservation({ id: reservation.id, customer_id: reservation.customer_id });
+  }
   console.log(await fetchReservations());
 
   const port = process.env.PORT || 3000;
