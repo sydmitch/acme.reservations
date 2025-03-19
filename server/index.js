@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const apiRouter = require('./api');
 
 const { 
   client,
@@ -13,10 +14,15 @@ const {
   destroyReservation,
 } = require('./db');
 
-// API routes
+// middleware
+app.use(express.json());
+
+app.use('/api', apiRouter);
 
 
-
+app.use((error, req, res, next) => {
+  res.status(error.status || 500).send({ error: err.message || err});
+});
 
 
 // initialize server
@@ -74,9 +80,11 @@ const init = async () => {
   app.listen(port, () => {
     console.log(`Server is listening on port ${port}.`);
     console.log('some curl commands to test');
-    console.log(`curl localhost:${port}/api/users`);
-    console.log(`curl localhost:${port}/api/places`);
-    console.log(`curl localhost:${port}/api/vacations`);
+    console.log(`curl localhost:${port}/api/customers`);
+    console.log(`curl localhost:${port}/api/restaurants`);
+    console.log(`curl localhost:${port}/api/reservations`);
+    console.log(`curl -X DELETE localhost:${port}/api/customers/${moe.id}/reservations/${reservation2.id}`);
+    console.log(`curl -X POST localhost:${port}/api/customers/${moe.id}/reservations -d '{"date": "2025-06-01", "party_count": 2, "restaurant_id": "${diner.id}"}' -H "Content-Type: application/json"`);
   });
 }
 init();
